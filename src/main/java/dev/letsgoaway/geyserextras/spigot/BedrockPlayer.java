@@ -261,7 +261,7 @@ public class BedrockPlayer {
 
     public Entity getTargetEntity(Player player) {
         Location loc = player.getEyeLocation();
-        RayTraceResult entityCast = player.getWorld().rayTraceEntities(loc, loc.getDirection(), Objects.requireNonNull(player.getAttribute(Attribute.PLAYER_ENTITY_INTERACTION_RANGE)).getBaseValue(), entity -> {
+        RayTraceResult entityCast = player.getWorld().rayTraceEntities(loc, loc.getDirection(), 3.0, entity -> {
             if (entity instanceof Player player1) {
                 return player1.getUniqueId() != player.getUniqueId();
             } else if (entity.isDead()) {
@@ -274,7 +274,7 @@ public class BedrockPlayer {
             return null;
         }
 
-        RayTraceResult blockCast = player.getWorld().rayTraceBlocks(loc, loc.getDirection(), Objects.requireNonNull(player.getAttribute(Attribute.PLAYER_ENTITY_INTERACTION_RANGE)).getBaseValue());
+        RayTraceResult blockCast = player.getWorld().rayTraceBlocks(loc, loc.getDirection(), 4.5);
 
         if (blockCast == null) {
             return entityCast.getHitEntity();
@@ -370,8 +370,7 @@ public class BedrockPlayer {
             Material.EXPERIENCE_BOTTLE,
             Material.LEGACY_EXP_BOTTLE,
             Material.ELYTRA,
-            Material.TURTLE_HELMET,
-            Material.WIND_CHARGE
+            Material.TURTLE_HELMET
     );
 
     public void onPlayerInteract(PlayerInteractEvent ev) {
@@ -417,7 +416,6 @@ public class BedrockPlayer {
             EntityType.VILLAGER,
             EntityType.ZOMBIE_VILLAGER,
             EntityType.ARMOR_STAND,
-            EntityType.CHEST_MINECART,
             EntityType.MINECART,
             EntityType.BOAT,
             EntityType.CHEST_BOAT,
@@ -427,11 +425,12 @@ public class BedrockPlayer {
             EntityType.PIG,
             EntityType.LLAMA,
             EntityType.CAMEL,
-            EntityType.COMMAND_BLOCK_MINECART,
-            EntityType.FURNACE_MINECART,
-            EntityType.HOPPER_MINECART,
-            EntityType.SPAWNER_MINECART,
-            EntityType.TNT_MINECART
+            EntityType.MINECART_CHEST,
+            EntityType.MINECART_COMMAND,
+            EntityType.MINECART_FURNACE,
+            EntityType.MINECART_HOPPER,
+            EntityType.MINECART_TNT,
+            EntityType.MINECART_MOB_SPAWNER
     );
 
     public void onPlayerInteractEntity(PlayerInteractEntityEvent ev) {
@@ -541,7 +540,7 @@ public class BedrockPlayer {
         coolDownThresHold = 1.0f;
         dontUnblockNextLeftClickAir = false;
         if (Config.javaBlockPlacement) {
-            ev.setCancelled(!ev.getBlockPlaced().equals(Objects.requireNonNull(player.rayTraceBlocks(Objects.requireNonNull(player.getAttribute(Attribute.PLAYER_BLOCK_INTERACTION_RANGE)).getBaseValue())).getHitBlock()));
+            ev.setCancelled(!ev.getBlockPlaced().equals(Objects.requireNonNull(player.rayTraceBlocks(4.5).getHitBlock())));
             if (ev.getBlockPlaced().getType().equals(Material.AIR) || ev.getBlockAgainst().getType().equals(Material.AIR)) {
                 ev.setCancelled(true);
             }

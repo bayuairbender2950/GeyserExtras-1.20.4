@@ -1,4 +1,5 @@
 # Project exclude paths
+.idx/
 /.gradle/
 /build/
 /build/classes/java/main/
