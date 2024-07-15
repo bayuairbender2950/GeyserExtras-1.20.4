@@ -19,7 +19,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
     - uses: actions/upload-artifact@v4
-    with:
-      name: GeyserExtra
-      path: build/libs/*.jar
+      with:
+        name: GeyserExtra
+        path: build/libs/*.jar
     
